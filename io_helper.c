@@ -36,7 +36,7 @@ int open_client_fd(char *hostname, int port) {
         return -2; // check h_errno for cause of error 
     bzero((char *) &server_addr, sizeof(server_addr));
     server_addr.sin_family = AF_INET;
-    bcopy((char *) hp->h_addr, 
+    bcopy((char *) hp->h_addr_list[0], 
           (char *) &server_addr.sin_addr.s_addr, hp->h_length);
     server_addr.sin_port = htons(port);
     
