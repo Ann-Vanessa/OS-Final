@@ -16,9 +16,6 @@ struct q_node{
     void *(*routine)(void *);
     void *arg;
 };
-// void* get_arg(q_node *ar) {
-//     return ar->arg;
-// }
 
 struct thread_pool{
     pthread_t *workers; //worker threads
@@ -72,8 +69,6 @@ void *worker_func(void *pool_arg){
         task_picked.routine(task_picked.arg);
 
         pthread_mutex_lock(&pool->mutex);
-        
-        
         
         pool->scheduled--;
 
@@ -135,10 +130,11 @@ struct thread_pool* pool_init(int max_threads,int buffer){
 }
 
 void pool_destroy(struct thread_pool *pool){
-    pool_wait(pool);
+    pool_wait(pool); // Ensure all tasks are completed before destruction
+
 
     for (int i=0; i < pool->max_workers; i++){
-        pthread_detach(pool->workers[i]);
+        pthread_detach(pool->workers[i]); // Cancel and join all threads
     }
 
     free(pool->workers);
