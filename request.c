@@ -20,7 +20,6 @@ int checkFileExtension(char* filename){
     }
     char **extension=malloc(sizeof(char*)*3);
     for (int i = 0; i < 3; i++) {
-    /* code */
         extension[i]=malloc(sizeof(char)*10);
     }
     extension[0][0]='o';
@@ -33,7 +32,6 @@ int checkFileExtension(char* filename){
         s[i]=s[strlen(s)-i-1];
         s[strlen(s)-i-1]=temp;
     }
-    // int flag1=0;
     for (int k = 0; k < 3; k++) {
         if (strcmp(s,extension[k])==0) {
             /* code */
@@ -141,7 +139,7 @@ void request_serve_dynamic(int fd, char *filename, char *cgiargs) {
     
     write_or_die(fd, buf, strlen(buf));
     
-    if (fork_or_die() == 0) {                        // child
+    if (fork_or_die() == 0) {                    // child
 	setenv_or_die("QUERY_STRING", cgiargs, 1);   // args to cgi go here
 	dup2_or_die(fd, STDOUT_FILENO);              // make cgi writes go to socket (not screen)
 	extern char **environ;                       // defined by libc 
@@ -196,22 +194,9 @@ void *request_handle(void *fd_rec) {
         return 0;
     }
     request_read_headers(fd);
-    // FILE *fp = fopen("test.txt", "w"); 
-    // if (fp == NULL) 
-    // { 
-    //     puts("Couldn't open file"); 
-    //     exit(0); 
-    // } 
-    // else
-    // { 
-    //     fputs(filename, fp); 
-    //     fclose(fp); 
-    // } 
-    // printf("%s\n",filename);
-    // struct stat stats;
+  
     is_static = request_parse_uri(uri, filename, cgiargs);
-    // printf("%d\n",strlen(filename));
-    // printf('')
+    
     if(checkFileExtension(filename)){
         request_error(fd, filename, "403", "Forbidden", "This file is Prohibited");
         close_or_die(fd);
@@ -230,7 +215,6 @@ void *request_handle(void *fd_rec) {
     if (is_static) {
     if (!(S_ISREG(sbuf.st_mode)) || !(S_IRUSR & sbuf.st_mode)) {
         request_error(fd, filename, "403", "Forbidden", "server could not read this file");
-        // printf("Hello\n");
         close_or_die(fd);
         return 0;
     }
